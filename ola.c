@@ -23,5 +23,6 @@ int main(int argc, char *argv[]) {
     }
 
     initScanner(file);
+    testScanner();
 
 }
