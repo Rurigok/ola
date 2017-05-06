@@ -193,7 +193,7 @@ char * readNextToken(bool advance) {
 
         if (i >= strSz) {
             strSz *= 2;
-            tokenStr = (char *) realloc(tokenStr, strSz);
+            tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
         }
 
         //printf("char is: %c ... ", lines[srcLineNr][colPos]);

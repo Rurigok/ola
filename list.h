@@ -1,22 +1,20 @@
+#define DEFAULT_LIST_ALLOC_SIZE 10
+#define LIST_ALLOC_SIZE_MULTIPLIER 2
 
-typedef struct listNode {
-    struct listNode *next;
-    struct listNode *prev;
-    void *value;
-} listNode;
+typedef struct deque {
+    void **valArray;
+    unsigned int size;
+    int maxPopIndex;
+    unsigned int allocSize;
+} deque;
 
-typedef struct llist {
-    struct listNode *head;
-    struct listNode *tail;
-    int size;
-} llist;
-
-llist * createList();                        // create a new linked list
-void listAdd(llist *list, void *value);     // add value to end
-void listShift(llist *list, void *value);   // add value to front
-void * listUnshift(llist *list);            // remove and return value at front
-void listPush(llist *list, void *value);    // add value to end
-void * listPop(llist *list);                // remove and return value at end
-void * listGet(llist *list, int index);     // get value at index
-void * listRemove(llist *list, int index);  // remove and return value at index
-void listClear(llist *list);                // remove all elements
+deque * createList();                       // create a new double-ended queue
+void listAdd(deque *list, void *value);     // add value to end
+void listShift(deque *list, void *value);   // add value to front
+void * listUnshift(deque *list);            // remove and return value at front
+void listPush(deque *list, void *value);    // add value to end
+void * listPop(deque *list);                // remove and return value at end
+void * listGet(deque *list, int index);     // get value at index
+void * listRemove(deque *list, int index);  // remove and return value at index
+void listClear(deque *list);                // remove all elements
+void listError(const char *message);

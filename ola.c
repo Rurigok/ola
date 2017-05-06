@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "scanner.h"
 
-void usage(char *progname, char *message) {
+void usage(char *progname, const char *message) {
 
     fprintf(stderr, "%s\n", message);
     fprintf(stderr, "Usage: %s filename\n", progname);
