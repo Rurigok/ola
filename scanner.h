@@ -9,11 +9,13 @@
 
 #define DELIMITERS "!@#%^&*()-+=[]/<>,~;:\"' \t\n\r\v"
 #define WHITESPACE " \v\t\n\r"
+#define QUOTES "\"'`"
 
 // Primary classifications
 typedef enum primClass_t {
     OPERAND,
     OPERATOR,
+    TOK_EOF
 } primClass_t;
 
 // Secondary classifications

@@ -191,6 +191,8 @@ char * readNextToken(bool advance) {
 
     while (!done) {
 
+        // TODO: handle escaped characters (quotes and special chars)
+
         if (i >= strSz) {
             strSz *= 2;
             tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
@@ -200,7 +202,9 @@ char * readNextToken(bool advance) {
 
         if (strchr(DELIMITERS, lines[srcLineNr][colPos])) {
 
-            //printf("found delim ...");
+            if (strchr(QUOTES, lines[srcLineNr][colPos])) {
+                // TODO: handle open quotes
+            }
 
             if (strlen(tokenStr) == 0) {
                 //printf("first char was delim, copied ... ");

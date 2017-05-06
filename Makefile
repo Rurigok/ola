@@ -5,4 +5,4 @@ run: ola
 	./ola test.ola
 
 clean:
-	rm ola
+	rm -f ola *.h.gch
