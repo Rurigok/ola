@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "list.h"
 
 deque * createList() {
@@ -45,15 +46,58 @@ void listPush(deque *list, void *value) {
 }
 
 void * listPop(deque *list) {
-    return NULL;
+
+    if (list == NULL) {
+        listError("pop from uninitialized list");
+    }
+
+    if (list->size == 0) {
+        return NULL;
+    }
+
+    void *poppedValue = list->valArray[list->maxPopIndex];
+
+    list->valArray[list->maxPopIndex] = NULL;
+    list->size--;
+    list->maxPopIndex--;
+
+    return poppedValue;
+
 }
 
 void * listGet(deque *list, int index) {
-    return NULL;
+
+    if (list == NULL) {
+        listError("get from uninitialized list");
+    }
+
+    if (list->size <= 0 || index > list->maxPopIndex) {
+        return NULL;
+    }
+
+    return list->valArray[index];
+
 }
 
 void * listRemove(deque *list, int index) {
-    return NULL;
+
+    if (list == NULL) {
+        listError("remove from uninitialized list");
+    }
+
+    if (list->size <= 0 || index > list->maxPopIndex) {
+        return NULL;
+    }
+
+    void *removedValue = list->valArray[index];
+
+    memmove(&list->valArray[index], &list->valArray[index + 1], sizeof(void *) * (list->maxPopIndex - index));
+
+    list->size--;
+    list->maxPopIndex--;
+
+    return removedValue;
+
 }
 
 void listClear(deque *list) {
