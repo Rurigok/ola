@@ -4,15 +4,15 @@
 #include "scanner.h"
 
 // Read-in file buffer
-extern char **lines;
+char **lines;
 
 // Scanner cursor position
-extern int srcLineNr;
-extern int colPos;
+int srcLineNr;
+int colPos;
 
 // Last read and next tokens
-extern token currentToken;
-extern token nextToken;
+token currentToken;
+token nextToken;
 
 // True if we reached EOF while advancing
 int done;
@@ -33,7 +33,7 @@ void initScanner(FILE *file) {
     lines = calloc(sizeof(char *), numLines);
 
     int lineSz = LINE_BUFFER_DEFAULT; // max size of line buffer
-    char *line = malloc(sizeof(char) * lineSz);      // current line buffer
+    lines[0] = calloc(sizeof(char), lineSz);      // initialize first line buffer
 
     char currentChar;   // current character from file
     int c = 0;          // column position in current line
@@ -44,18 +44,18 @@ void initScanner(FILE *file) {
         currentChar = fgetc(file);
 
         if (currentChar == '\n') {
-            line[c] = '\0'; // null terminate current line
-            lines[lineNr++] = line; // add current line to line buffer
-            line = malloc(sizeof(char) * lineSz);   // allocate space for next line
+            lines[lineNr][c] = '\0';                        // null terminate current line
+            lineNr++;                                       // advance to next line
+            lines[lineNr] = calloc(sizeof(char), lineSz);   // allocate space for our new line
             c = 0;
         } else {
-            line[c++] = currentChar; // add character to current line
+            lines[lineNr][c++] = currentChar; // add character to current line
         }
 
         if (c >= lineSz) {
             // if we run out of room in our current line, double the size.
             lineSz *= 2;
-            line = realloc(line, sizeof(char) * lineSz);
+            lines[lineNr] = realloc(lines[lineNr], sizeof(char) * lineSz);
         }
 
         if (lineNr >= numLines) {
@@ -67,10 +67,23 @@ void initScanner(FILE *file) {
     }
 
     // mark last line as done with NULL
-    lines[++lineNr] = NULL;
+    lines[lineNr] = NULL;
     readLines = lineNr;
 
     printf("Read %d line(s)\n", readLines);
+
+    printf("========================\n");
+    int l = 0;
+    while (lines[l] != NULL) {
+        printf("%s\n", lines[l++]);
+    }
+    printf("========================\n");
+
+    char *token;
+
+    while ((token = readNextToken()) != NULL) {
+        printf("token: %s\n", token);
+    }
 
 }
 
@@ -86,7 +99,48 @@ char * getNext() {
 
 char * readNextToken() {
 
-    char c = lines[srcLineNr][colPos];
+    if (done) {
+        return NULL;
+    }
+
+    skipWhitespace();
+
+    int i = 0;
+    int strSz = TOKEN_DEFAULT_LEN;
+    char *tokenStr = calloc(sizeof(char), strSz);
+
+    while (!done) {
+
+        if (i >= strSz) {
+            strSz *= 2;
+            tokenStr = realloc(tokenStr, strSz);
+        }
+
+        //printf("char is: %c ... ", lines[srcLineNr][colPos]);
+
+        if (strchr(DELIMITERS, lines[srcLineNr][colPos])) {
+
+            //printf("found delim ...");
+
+            if (strlen(tokenStr) == 0) {
+                //printf("first char was delim, copied ... ");
+                memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
+                advanceCursor();
+            }
+
+            break;
+        } else {
+
+            //printf("is not delim, copied ... ");
+            memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
+            advanceCursor();
+
+        }
+
+    }
+
+    //printf("returning: %s\n", tokenStr);
+    return tokenStr;
 
 }
 
@@ -95,11 +149,12 @@ If the internal cursor is on a whitespace character, this function advances
 the cursor until a non-whitespace character is found.
 Otherwise, it does nothing.
 
-Post-condition: internal cursor is on a non-whitespace character or EOF
+Post-condition: internal cursor is on the first non-whitespace character found or EOF
 */
 void skipWhitespace() {
 
-    while (strchr(WHITESPACE, lines[srcLineNr][colPos])) {
+    while (strchr(WHITESPACE, lines[srcLineNr][colPos]) && !done) {
+        //printf("skipped whitespace at %d, %d\n", srcLineNr, colPos);
         advanceCursor();
     }
 
@@ -115,6 +170,7 @@ void advanceCursor() {
     if (colPos == strlen(lines[srcLineNr])) {
         // We've reached the end of this line
         srcLineNr++;
+        colPos = 0;
 
         if (lines[srcLineNr] == NULL) {
             // We're out of lines
@@ -122,5 +178,7 @@ void advanceCursor() {
         }
 
     }
+
+    //printf("advanced to line %d, %d\n", srcLineNr, colPos);
 
 }

@@ -1,2 +1,2 @@
-all: ourlang.c scanner.c scanner.h
-	gcc -o ourlang ourlang.c scanner.c
+all: ola.c scanner.c scanner.h
+	gcc -g -o ola ola.c scanner.c
