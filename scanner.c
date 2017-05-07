@@ -29,8 +29,16 @@ void initScanner(FILE *file) {
     int numLines = NUM_LINES_DEFAULT;
     lines = (char **) calloc(sizeof(char *), numLines);
 
+    if (lines == NULL) {
+        sysError("calloc on lines buffer initialization");
+    }
+
     int lineSz = LINE_BUFFER_DEFAULT; // max size of line buffer
     lines[0] = (char *) calloc(sizeof(char), lineSz);      // initialize first line buffer
+
+    if (lines[0] == NULL) {
+        sysError("calloc on first scanner line");
+    }
 
     char currentChar;   // current character from file
     int c = 0;          // column position in current line
@@ -44,6 +52,11 @@ void initScanner(FILE *file) {
             lines[lineNr][c] = '\0';                        // null terminate current line
             lineNr++;                                       // advance to next line
             lines[lineNr] = (char *) calloc(sizeof(char), lineSz);   // allocate space for our new line
+
+            if (lines[lineNr] == NULL) {
+                sysError("calloc");
+            }
+
             c = 0;
         } else {
             lines[lineNr][c++] = currentChar; // add character to current line
@@ -52,12 +65,14 @@ void initScanner(FILE *file) {
         if (c >= lineSz) {
             // if we run out of room in our current line, double the size.
             lineSz *= 2;
+            // TODO: assign to temp var to check if NULL
             lines[lineNr] = (char *) realloc(lines[lineNr], sizeof(char) * lineSz);
         }
 
         if (lineNr >= numLines) {
             // if we run out of room for lines, double the max # of lines.
             numLines *= 2;
+            // TODO: assign to temp var to check if NULL
             lines = (char **) realloc(lines, sizeof(char *) * numLines);
         }
 
@@ -193,6 +208,10 @@ char * readNextToken(bool advance) {
     int i = 0;
     int strSz = TOKEN_DEFAULT_LEN;
     char *tokenStr = (char *) calloc(sizeof(char), strSz);
+
+    if (tokenStr == NULL) {
+        sysError("calloc");
+    }
 
     while (!done) {
 

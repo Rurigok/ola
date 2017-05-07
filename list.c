@@ -2,16 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "error.h"
 #include "list.h"
 
 deque * createList() {
 
     deque *newList = (deque *) malloc(sizeof(deque));
 
+    if (newList == NULL) {
+        sysError("malloc");
+    }
+
     newList->size = 0;
     newList->maxPopIndex = -1;
     newList->valArray = (void **) calloc(sizeof(void *), DEFAULT_LIST_ALLOC_SIZE);
     newList->allocSize = DEFAULT_LIST_ALLOC_SIZE;
+
+    if (newList->valArray == NULL) {
+        sysError("calloc");
+    }
 
     return newList;
 
@@ -36,6 +45,7 @@ void listPush(deque *list, void *value) {
     }
 
     if (list->size >= list->allocSize) {
+        // TODO: assign realloc to temp var to check for NULL and prevent memory leak
         list->valArray = (void **) realloc(list->valArray, sizeof(void *) * list->allocSize * LIST_ALLOC_SIZE_MULTIPLIER);
         list->allocSize = list->allocSize * LIST_ALLOC_SIZE_MULTIPLIER;
     }
