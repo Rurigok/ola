@@ -1,3 +1,6 @@
+#ifndef OLA_LIST_IMPL_H
+#define OLA_LIST_IMPL_H
+
 #define DEFAULT_LIST_ALLOC_SIZE 10
 #define LIST_ALLOC_SIZE_MULTIPLIER 2
 
@@ -18,3 +21,5 @@ void * listGet(deque *list, int index);     // get value at index
 void * listRemove(deque *list, int index);  // remove and return value at index
 void listClear(deque *list);                // remove all elements
 void listError(const char *message);
+
+#endif

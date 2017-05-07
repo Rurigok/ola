@@ -1,3 +1,6 @@
+#ifndef OLA_SCANNER_H
+#define OLA_SCANNER_H
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -36,3 +39,5 @@ char * getNext();
 void classifyToken(token *tok);
 char * readNextToken(bool advance);
 void advanceCursor();
+
+#endif
