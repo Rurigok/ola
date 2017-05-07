@@ -1,7 +1,5 @@
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdbool.h>
 
 #define LINE_BUFFER_DEFAULT 160
 #define NUM_LINES_DEFAULT 100
@@ -10,6 +8,8 @@
 #define DELIMITERS "!@#%^&*()-+=[]/<>,~;:\"' \t\n\r\v"
 #define WHITESPACE " \v\t\n\r"
 #define QUOTES "\"'`"
+
+#define IDENTIFIER_ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 
 // Primary classifications
 typedef enum primClass_t {

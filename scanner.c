@@ -1,4 +1,9 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "scanner.h"
+#include "error.h"
 
 // Read-in file buffer
 char **lines;
@@ -193,7 +198,7 @@ char * readNextToken(bool advance) {
 
         // TODO: handle escaped characters (quotes and special chars)
 
-        if (i >= strSz) {
+        if (i >= strSz - 1) {
             strSz *= 2;
             tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
         }
@@ -213,15 +218,22 @@ char * readNextToken(bool advance) {
             }
 
             break;
-        } else {
+        } else if (strchr(IDENTIFIER_ALPHABET, lines[srcLineNr][colPos])) {
 
             //printf("is not delim, copied ... ");
             memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
             advanceCursor();
 
+        } else {
+
+            fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
+            syntaxError("Invalid character found", srcLineNr + 1);
+
         }
 
     }
+
+    tokenStr[i] = '\0';
 
     if (!advance) {
         srcLineNr = savedLineNr;
