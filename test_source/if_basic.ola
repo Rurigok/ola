@@ -1,0 +1,34 @@
+bool b = false;
+
+if b:
+    int i = 5;
+else:
+    int i = 10;
+
+print(i);   // i = 10
+
+if i == 10 and not b:
+    int j = i + 10;
+else:
+    j = j + 1;  // this is an error, but this line will never be parsed, so nothing happens.
+
+print(j);   // j = 20
+
+bool b2 = true;
+bool b3 = not not b2;
+
+if b2:
+    j = j + 1;
+    if j == 21 and b3:
+        if j != 21:
+            print("bad things happened...");
+        else:
+            int k = 999;
+            print("if->if->else");
+        k = k + 1;
+    else:
+        print("bad things happened...");
+else:
+    print("bad things happened...");
+
+print(k);   // k = 1000
