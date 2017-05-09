@@ -5,6 +5,9 @@ if b:
 else:
     int i = 10;
 
+if ((i == 0) or (i > 9):
+    i = i * 10 / 10;
+
 print(i);   // i = 10
 
 if i == 10 and not b:

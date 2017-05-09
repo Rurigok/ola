@@ -1,0 +1,24 @@
+// 0, 1, 2, ..., 10
+for i to 10:
+    print(i);
+print("done:", i);  // i = 10
+
+// 0, 1, 2, ..., 9
+for i until 10:
+    print(i);
+print("done:", i);  // i = 9
+
+// 5, 6, 7, ..., 10
+for i from 5 to 10:
+    print(i);
+print("done:", i);  // i = 10
+
+// 5, 6, 7, ..., 9
+for i from 5 until 10:
+    print(i);
+print("done:", i);  // i = 9
+
+i = 3;
+// 3, 3, 3
+for i times:
+    print(i);
