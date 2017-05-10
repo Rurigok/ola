@@ -275,18 +275,19 @@ char * readNextToken(bool advance) {
                 }
                 break;
 
-            } else if (strchr(IDENTIFIER_ALPHABET, lines[srcLineNr][colPos])) {
+            } else {
 
                 //printf("is not delim, copied ... ");
                 memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
                 advanceCursor();
 
-            } else {
-
-                fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
-                syntaxError("Invalid character found", srcLineNr + 1);
-
             }
+//            } else {
+//
+//                fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
+//                syntaxError("Invalid character found", srcLineNr + 1);
+//
+//            }
 
         }
 
@@ -332,7 +333,7 @@ void advanceCursor() {
 
     colPos++;
 
-    if (colPos == strlen(lines[srcLineNr])) {
+    if (colPos >= strlen(lines[srcLineNr])) {
         // We've reached the end of this line
         srcLineNr++;
         colPos = 0;

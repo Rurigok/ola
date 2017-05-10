@@ -17,6 +17,7 @@
 
 // Primary classifications
 typedef enum primClass_t {
+    KEYWORD,
     OPERAND,
     OPERATOR,
     TOK_EOF
@@ -24,7 +25,23 @@ typedef enum primClass_t {
 
 // Secondary classifications
 typedef enum subClass_t {
-    IDENTIFIER
+    IDENTIFIER,
+    STRING,
+    INTEGER,
+    FLOAT,
+    BOOL,
+    FOR,
+    WHILE,
+    IF,
+    ELSE,
+    DEF,
+    IN,
+    SELECT,
+    WHEN,
+    CLASS,
+    NNET,
+    LIST,
+    MATRIX
 } subClass_t;
 
 typedef struct token {
