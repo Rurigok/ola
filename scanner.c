@@ -213,40 +213,80 @@ char * readNextToken(bool advance) {
         sysError("calloc");
     }
 
-    while (!done) {
+    char openQuoteCh = 0;
+    bool escaped = false;
 
-        // TODO: handle escaped characters (quotes and special chars)
+    if (strchr(QUOTES, lines[srcLineNr][colPos])) {
+        openQuoteCh = lines[srcLineNr][colPos];
+        advanceCursor();
 
-        if (i >= strSz - 1) {
-            strSz *= 2;
-            tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
-        }
+        while (1) {
 
-        //printf("char is: %c ... ", lines[srcLineNr][colPos]);
-
-        if (strchr(DELIMITERS, lines[srcLineNr][colPos])) {
-
-            if (strchr(QUOTES, lines[srcLineNr][colPos])) {
-                // TODO: handle open quotes
+            if (i >= strSz - 1) {
+                strSz *= 2;
+                tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
             }
 
-            if (strlen(tokenStr) == 0) {
-                //printf("first char was delim, copied ... ");
-                memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
+            if (lines[srcLineNr][colPos] == openQuoteCh && !escaped) {
                 advanceCursor();
+                break;
             }
 
-            break;
-        } else if (strchr(IDENTIFIER_ALPHABET, lines[srcLineNr][colPos])) {
+            if (lines[srcLineNr][colPos] == '\\') {
+                //printf("Found escape sequence at %d %d\n", srcLineNr, colPos);
+                escaped = true;
+                advanceCursor();
+                continue;
+            }
 
-            //printf("is not delim, copied ... ");
+            if (escaped) {
+                if (strchr(ESCAPABLE, lines[srcLineNr][colPos])) {
+                    //printf("Resolved escape sequence of %c\n", lines[srcLineNr][colPos]);
+                    char replacement = resolveEscapeSequence(lines[srcLineNr][colPos]);
+                    memcpy(&tokenStr[i++], &replacement, 1);
+                    advanceCursor();
+                    escaped = false;
+                    continue;
+                } else {
+                    syntaxError("Invalid character in escape sequence", lines[srcLineNr][colPos]);
+                }
+            }
+
             memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
             advanceCursor();
 
-        } else {
+        }
 
-            fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
-            syntaxError("Invalid character found", srcLineNr + 1);
+    } else {
+
+        while (!done) {
+
+            if (i >= strSz - 1) {
+                strSz *= 2;
+                tokenStr = (char *) realloc(tokenStr, sizeof(char) * strSz);
+            }
+
+            if (strchr(DELIMITERS, lines[srcLineNr][colPos])) {
+
+                if (strlen(tokenStr) == 0) {
+                    //printf("first char was delim, copied ... ");
+                    memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
+                    advanceCursor();
+                }
+                break;
+
+            } else if (strchr(IDENTIFIER_ALPHABET, lines[srcLineNr][colPos])) {
+
+                //printf("is not delim, copied ... ");
+                memcpy(&tokenStr[i++], &lines[srcLineNr][colPos], 1);
+                advanceCursor();
+
+            } else {
+
+                fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
+                syntaxError("Invalid character found", srcLineNr + 1);
+
+            }
 
         }
 
@@ -262,6 +302,27 @@ char * readNextToken(bool advance) {
     //printf("returning: %s\n", tokenStr);
     return tokenStr;
 
+}
+
+char resolveEscapeSequence(char escapedChar) {
+    switch (escapedChar) {
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 't':
+            return '\t';
+        case '\\':
+            return '\\';
+        case '"':
+            return '"';
+        case '\'':
+            return '\'';
+        case '`':
+            return '`';
+        default:
+            internalError("Attempted to resolve an invalid escape character");
+    }
 }
 
 /*

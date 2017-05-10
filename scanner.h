@@ -11,6 +11,7 @@
 #define DELIMITERS "!@#%^&*()-+=[]/<>,~;:\"' \t\n\r\v"
 #define WHITESPACE " \v\t\n\r"
 #define QUOTES "\"'`"
+#define ESCAPABLE "\\\"'ntr`"
 
 #define IDENTIFIER_ALPHABET "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 
@@ -36,6 +37,7 @@ void initScanner(FILE *file);
 void testScanner();
 
 char * getNext();
+char resolveEscapeSequence(char escapedChar);
 void classifyToken(token *tok);
 char * readNextToken(bool advance);
 void advanceCursor();
