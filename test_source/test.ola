@@ -1,12 +1,9 @@
 int i = 0;
-string s = "hello!";
+string s = "he\"''`'\"\'\n\tllo!";
+
+s = s + " this is a pretty long token and should probably cause some reallocs...";
 
 i = i + 1;
 i *= 2;
-
-
-
-
-
 
 print(i + 2);

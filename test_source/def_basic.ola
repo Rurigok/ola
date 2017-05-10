@@ -1,42 +1,32 @@
-def void hello() {
+def void hello():
     print("hello");
-}
 
-def void helloMany(int i, float f, string s, bool b) {
+def void helloMany(int i, float f, string s, bool b):
     print(i, f, s, b);
-}
 
-def int helloInt() {
+def int helloInt():
     return 1;
-}
 
-def string helloString() {
+def string helloString():
     return "hi";
-}
 
-def bool helloBool() {
+def bool helloBool():
     return false;
-}
 
-def float helloFloat() {
+def float helloFloat():
     return 3.14156;
-}
 
-def int helloAdd(int i) {
+def int helloAdd(int i):
     return i + 1;
-}
 
-def string helloConcat(string s) {
+def string helloConcat(string s):
     return s + "!!";
-}
 
-def bool helloNegate(bool b) {
+def bool helloNegate(bool b):
     return !b;
-}
 
-def float helloE(float f) {
+def float helloE(float f):
     return f * 2.71828;
-}
 
 hello();
 helloMany(1, 3.1415, "world", false);
