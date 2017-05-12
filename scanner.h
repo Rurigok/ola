@@ -44,18 +44,18 @@ typedef enum subClass_t {
     MATRIX
 } subClass_t;
 
-typedef struct token {
+typedef struct token_t {
     char *tokenStr;
     primClass_t primClass;
     subClass_t subClass;
-} token;
+} token_t;
 
 void initScanner(FILE *file);
 void testScanner();
 
 char * getNext();
 char resolveEscapeSequence(char escapedChar);
-void classifyToken(token *tok);
+void classifyToken(token_t *tok);
 char * readNextToken(bool advance);
 void advanceCursor();
 

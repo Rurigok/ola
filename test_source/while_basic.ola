@@ -1,18 +1,18 @@
-int j = 20;
+int j = 20
 while j > 0:
-    j = j - 1;
+    j = j - 1
 
     if j % 2 == 0:
-        print(j, " is even");
+        print(j, " is even")
     else if j % 3 == 0:
-        print(j, " multiple of 3");
+        print(j, " multiple of 3")
     else:
-        print(j);
+        print(j)
 
-    int k = 0;
+    int k = 0
 
     while k < 5:
-        k = k + 1;
-        print("k:", k);
+        k = k + 1
+        print("k:", k)
 
-print("done:", j, k);   // j = 0, k = 0
+print("done:", j, k)   // j = 0, k = 0

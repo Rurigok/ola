@@ -6,7 +6,7 @@
 #include "parser.h"
 #include "error.h"
 
-extern token currentToken;
+extern token_t currentToken;
 
 void beginParsing() {
 

@@ -1,0 +1,32 @@
+// Language spec: non-specified int array elements default to 0
+
+int x[10] = [0, 1, 2]   // Array (max size of 10 elems, 0..9)
+int y[10] = []          // All elements zeroed
+int z[10]               // Same as above
+
+print(x)        // [0, 1, 2, 0, 0, 0, ..., 0] (10 elements in total)
+
+x[4] = 4
+
+print(x)        // [0, 1, 2, 0, 4, 0, 0, ..., 0]
+
+print(x[3])     // 0
+
+x[9] = 9
+
+print(x[9])     // 9
+print(x[-1])    // 9
+
+// Scalar to whole array assignment
+x[:] = 1
+print(x)        // [1, 1, 1, 1, ..., 1]
+
+// Scalar to slice assignment
+x[2:5] = 2
+print(x)        // [1, 1, 2, 2, 2, 1, 1, ..., 1]
+
+x[5:] = 3
+print(x)        // [1, 1, 2, 2, 2, 3, 3, 3, 3, 3]
+
+x[:5] = 0
+print(x)        // [0, 0, 0, 0, 0, 3, 3, 3, 3, 3]

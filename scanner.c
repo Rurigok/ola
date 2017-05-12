@@ -13,11 +13,9 @@ unsigned int srcLineNr = 0;
 unsigned int colPos = 0;
 
 // Last read and next tokens
-token currentToken;
-token nextToken;
+token_t currentToken;
+token_t nextToken;
 
-// True if we reached EOF while advancing
-bool done = false;
 unsigned int readLines = 0;
 
 /*
@@ -65,15 +63,25 @@ void initScanner(FILE *file) {
         if (c >= lineSz) {
             // if we run out of room in our current line, double the size.
             lineSz *= 2;
-            // TODO: assign to temp var to check if NULL
-            lines[lineNr] = (char *) realloc(lines[lineNr], sizeof(char) * lineSz);
+
+            char *temp = (char *) realloc(lines[lineNr], sizeof(char) * lineSz);
+            if (temp == NULL) {
+                sysError("realloc failed");
+            }
+
+            lines[lineNr] = temp;
         }
 
         if (lineNr >= numLines) {
             // if we run out of room for lines, double the max # of lines.
             numLines *= 2;
-            // TODO: assign to temp var to check if NULL
-            lines = (char **) realloc(lines, sizeof(char *) * numLines);
+
+            char *temp = (char *) realloc(lines[lineNr], sizeof(char) * lineSz);
+            if (temp == NULL) {
+                sysError("realloc failed");
+            }
+
+            lines[lineNr] = temp;
         }
 
     }
@@ -117,7 +125,7 @@ char * getNext() {
 
 }
 
-void classifyToken(token *tok) {
+void classifyToken(token_t *tok) {
 
     if (strcmp(tok->tokenStr, ";") == 0) {
 
@@ -192,16 +200,17 @@ Allocates space for and returns the next token string.
 */
 char * readNextToken(bool advance) {
 
-    if (done) {
-        return NULL;
-    }
-
     int savedLineNr = srcLineNr;
     int savedColPos = colPos;
 
     // Advances internal cursor until we find a non-whitespace char
-    while (strchr(WHITESPACE, lines[srcLineNr][colPos]) && !done) {
+    while (strchr(WHITESPACE, lines[srcLineNr][colPos])) {
         //printf("skipped whitespace at %d, %d\n", srcLineNr, colPos);
+
+        if (lines[srcLineNr] == NULL) {
+            return NULL;
+        }
+
         advanceCursor();
     }
 
@@ -218,9 +227,14 @@ char * readNextToken(bool advance) {
 
     if (strchr(QUOTES, lines[srcLineNr][colPos])) {
         openQuoteCh = lines[srcLineNr][colPos];
+        int openLineNr = srcLineNr;
         advanceCursor();
 
-        while (1) {
+        while (true) {
+
+            if (lines[srcLineNr] == NULL) {
+                syntaxError("Unclosed string literal", openLineNr);
+            }
 
             if (i >= strSz - 1) {
                 strSz *= 2;
@@ -259,7 +273,11 @@ char * readNextToken(bool advance) {
 
     } else {
 
-        while (!done) {
+        while (true) {
+
+            if (lines[srcLineNr] == NULL) {
+                return NULL;
+            }
 
             if (i >= strSz - 1) {
                 strSz *= 2;
@@ -282,12 +300,6 @@ char * readNextToken(bool advance) {
                 advanceCursor();
 
             }
-//            } else {
-//
-//                fprintf(stderr, "Invalid char: %c\n", lines[srcLineNr][colPos]);
-//                syntaxError("Invalid character found", srcLineNr + 1);
-//
-//            }
 
         }
 
@@ -337,12 +349,6 @@ void advanceCursor() {
         // We've reached the end of this line
         srcLineNr++;
         colPos = 0;
-
-        if (lines[srcLineNr] == NULL) {
-            // We're out of lines
-            done = true;
-        }
-
     }
 
     //printf("advanced to line %d, %d\n", srcLineNr, colPos);

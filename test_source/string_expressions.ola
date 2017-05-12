@@ -1,5 +1,5 @@
-string s = "hello";
-s = s + " world!";
-s = " " + s;
-s = "3x:" + s + s + s;
-print(s);
+string s = "hello"
+s = s + " world!"
+s = " " + s
+s = "3x:" + s + s + s
+print(s)
