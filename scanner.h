@@ -17,7 +17,7 @@
 
 // Primary classifications
 typedef enum primClass_t {
-    KEYWORD,
+    DATA_TYPE,
     OPERAND,
     OPERATOR,
     TOK_EOF

@@ -1,0 +1,4 @@
+#ifndef OLA_HASHTABLE_H
+#define OLA_HASHTABLE_H
+
+#endif //OLA_HASHTABLE_H
