@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "deque.h"
 #include "error.h"
-#include "list.h"
 
 deque * createList() {
 
