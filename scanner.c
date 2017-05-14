@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "scanner.h"
 #include "error.h"
+#include "parser.h"
+#include "scanner.h"
 
 // Read-in file buffer
 char **lines;
@@ -130,65 +131,92 @@ void classifyToken(token_t *tok) {
     if (strcmp(tok->tokenStr, ";") == 0) {
 
     } else if (strcmp(tok->tokenStr, "=") == 0) {
-
+        tok->primClass = OPERATOR;
+    } else if (strcmp(tok->tokenStr, "int") == 0) {
+        tok->primClass = DATA_TYPE;
+        tok->subClass = INTEGER;
+    } else if (strcmp(tok->tokenStr, "float") == 0) {
+        tok->primClass = DATA_TYPE;
+        tok->subClass = FLOAT;
+    } else if (strcmp(tok->tokenStr, "bool") == 0) {
+        tok->primClass = DATA_TYPE;
+        tok->subClass = INTEGER;
+    } else if (strcmp(tok->tokenStr, "string") == 0) {
+        tok->primClass = DATA_TYPE;
+        tok->subClass = STRING;
+    } else if (strcmp(tok->tokenStr, "def") == 0) {
+        tok->primClass = CONTROL;
+        tok->subClass = DEF;
+    } else if (strcmp(tok->tokenStr, "class") == 0) {
+        tok->primClass = CONTROL;
+        tok->subClass = CLASS;
     } else if (strcmp(tok->tokenStr, "if") == 0) {
-
+        tok->primClass = CONTROL;
+        tok->subClass = IF;
     } else if (strcmp(tok->tokenStr, "while") == 0) {
-
+        tok->primClass = CONTROL;
+        tok->subClass = WHILE;
     } else if (strcmp(tok->tokenStr, "for") == 0) {
-
+        tok->primClass = CONTROL;
+        tok->subClass = FOR;
     } else if (strcmp(tok->tokenStr, "==") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "!=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, ">") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "<") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, ">=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "<=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "+") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->precedence = 10;
     } else if (strcmp(tok->tokenStr, "-") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->precedence = 10;
     } else if (strcmp(tok->tokenStr, "/") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->precedence = 20;
     } else if (strcmp(tok->tokenStr, "*") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->precedence = 20;
     } else if (strcmp(tok->tokenStr, "+=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "-=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "*=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "/=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "%=") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "(") == 0) {
-
+        tok->primClass = SEPARATOR;
     } else if (strcmp(tok->tokenStr, ")") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->subClass = R_PAREN;
     } else if (strcmp(tok->tokenStr, "[") == 0) {
-
+        tok->primClass = SEPARATOR;
     } else if (strcmp(tok->tokenStr, "]") == 0) {
-
+        tok->primClass = SEPARATOR;
     } else if (strcmp(tok->tokenStr, "!") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "@") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "#") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "%") == 0) {
-
+        tok->primClass = OPERATOR;
+        tok->precedence = 20;
     } else if (strcmp(tok->tokenStr, "^") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, "&") == 0) {
-
+        tok->primClass = OPERATOR;
     } else if (strcmp(tok->tokenStr, ":") == 0) {
-
+        tok->primClass = SEPARATOR;
     } else {
 
     }

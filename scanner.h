@@ -18,8 +18,11 @@
 // Primary classifications
 typedef enum primClass_t {
     DATA_TYPE,
+    FUNCTION,
     OPERAND,
     OPERATOR,
+    CONTROL,
+    SEPARATOR,
     TOK_EOF
 } primClass_t;
 
@@ -49,6 +52,7 @@ typedef struct token_t {
     char *tokenStr;
     primClass_t primClass;
     subClass_t subClass;
+    int precedence;
 } token_t;
 
 void initScanner(FILE *file);
@@ -58,7 +62,7 @@ char * getNext();
 char resolveEscapeSequence(char escapedChar);
 void classifyToken(token_t *tok);
 token_t *dupToken(token_t *targetToken);
-        char * readNextToken(bool advance);
+char * readNextToken(bool advance);
 void advanceCursor();
 
 #endif

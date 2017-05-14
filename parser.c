@@ -25,11 +25,29 @@ void parseStatement(bool exec) {
 
     if (currentToken.primClass == DATA_TYPE) {
         parseDeclaration(exec);
-    } else if (currentToken.primClass == OPERAND) {
-        if (currentToken.subClass == IDENTIFIER) {
-            parseAssignment(exec);
-        }
+    } else if (currentToken.subClass == IDENTIFIER) {
+        parseAssignment(exec);
+    } else if (currentToken.subClass == DEF) {
+        parseDef(exec);
+    } else if (currentToken.subClass == CLASS) {
+        parseClass(exec);
+    } else if (currentToken.subClass == IF) {
+        parseIf(exec);
+    } else if (currentToken.subClass == FOR) {
+        parseFor(exec);
+    } else if (currentToken.subClass == WHILE) {
+        parseWhile(exec);
+    } else if (currentToken.primClass == FUNCTION) {
+        parseExpression(exec, NULL, true);
     }
+
+}
+
+void parseAssignment(bool exec) {
+
+}
+
+void parseClass(bool exec) {
 
 }
 
@@ -62,7 +80,7 @@ void parseDeclaration(bool exec) {
 
 }
 
-void parseAssignment(bool exec) {
+void parseDef(bool exec) {
 
 }
 
@@ -128,6 +146,10 @@ value_t *parseExpression(bool exec, char *terminatingStr, bool toEOL) {
 
     }
 
+    while (operatorStack->size > 0) {
+        dequePush(postfixStack, dequePop(operatorStack));
+    }
+
     // Postfix expression is populated
 
     // TODO: Evaluate postfix expression
@@ -136,11 +158,31 @@ value_t *parseExpression(bool exec, char *terminatingStr, bool toEOL) {
 
 }
 
-int comparePrecedence(char *onStack, char *current) {
+void parseFor(bool exec) {
 
-    // TODO: return 1 if current operator has a higher pred than onStack, 0 if equal, -1 otherwise
+}
 
-    return 0;
+void parseIf(bool exec) {
+
+}
+
+void parseWhile(bool exec) {
+
+}
+
+value_t callFunction(bool exec, int args, ...) {
+
+}
+
+int comparePrecedence(token_t *onStack, token_t *current) {
+
+    if (current->precedence > onStack->precedence) {
+        return 1;
+    } else if (current->precedence == onStack->precedence) {
+        return 0;
+    } else {
+        return -1;
+    }
 
 }
 
@@ -156,7 +198,21 @@ value_t *resolveLiteral(token_t *token) {
         sysError("malloc value");
 
     value->value = token->tokenStr;
-    value->dataType = token->subClass;
+
+    switch (token->subClass) {
+        case INTEGER:
+            value->dataType = DT_INTEGER;
+            break;
+        case FLOAT:
+            value->dataType = DT_FLOAT;
+            break;
+        case BOOLEAN:
+            value->dataType = DT_BOOLEAN;
+            break;
+        case STRING:
+            value->dataType = DT_STRING;
+            break;
+    }
 
     return value;
 
