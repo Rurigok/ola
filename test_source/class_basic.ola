@@ -1,0 +1,53 @@
+class Enemy:
+
+    string name
+    int hp
+
+    def Enemy(string name, int hp):
+        this.name = name
+        this.hp = hp
+
+class Weapon:
+
+    string name
+    int baseDamage
+
+    def Weapon(string name, int baseDamage):
+        this.name = name
+        this.baseDamage = baseDamage
+
+class Sword extends Weapon:
+
+    int slashingDmg
+
+    def Sword(string name, int baseDamage, int slashingDmg):
+        this.name = name
+        this.baseDamage = baseDamage
+        this.slashingDmg = slashingDmg
+
+    def void attack(Enemy enemy):
+        enemy.hp = enemy.hp - (baseDamage + slashingDmg)
+
+class Mace extends Weapon:
+
+    int bluntDmg
+
+    def Mace(string name, int baseDamage, int bluntDmg):
+        super(name, baseDamage)
+        this.bluntDmg = bluntDmg
+
+    def void attack(Enemy enemy):
+        enemy.hp = enemy.hp - (baseDamage + bluntDmg)
+
+Enemy enemy = Enemy("wolf", 20)
+
+Sword sword = Sword("longsword", 5, 2)
+Mace mace = Mace("flail", 4, 3)
+
+printf("%s has %d hp", enemy.name, enemy.hp)
+
+// Don't ask why the weapons themselves are attacking...
+sword.attack(enemy)
+mace.attack(mace)
+
+printf("%s now has %d hp", enemy.name, enemy.hp)
