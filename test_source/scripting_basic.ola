@@ -1,0 +1,17 @@
+string output
+int code
+
+output, code = run("date")
+
+if code == 0:
+    print("Date:", output)
+else:
+    print("date program failed")
+
+revDate, code = run("rev", output)
+
+if code == 0:
+    print("Reversed date:", revDate)
+else:
+    print("rev program failed")
+
