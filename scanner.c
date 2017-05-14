@@ -195,6 +195,21 @@ void classifyToken(token_t *tok) {
 
 }
 
+token_t *dupToken(token_t *targetToken) {
+
+    token_t *newToken = calloc(sizeof(token_t), 1);
+
+    if (newToken == NULL)
+        sysError("calloc dup");
+
+    newToken->primClass = targetToken->primClass;
+    newToken->subClass = targetToken->subClass;
+    newToken->tokenStr = strdup(targetToken->tokenStr);
+
+    return newToken;
+
+}
+
 /*
 Allocates space for and returns the next token string.
 */
@@ -202,6 +217,10 @@ char * readNextToken(bool advance) {
 
     int savedLineNr = srcLineNr;
     int savedColPos = colPos;
+
+    if (lines[srcLineNr] == NULL) {
+        return NULL;
+    }
 
     // Advances internal cursor until we find a non-whitespace char
     while (strchr(WHITESPACE, lines[srcLineNr][colPos])) {

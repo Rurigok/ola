@@ -1,8 +1,8 @@
-#ifndef OLA_LIST_IMPL_H
-#define OLA_LIST_IMPL_H
+#ifndef OLA_DEQUE_H
+#define OLA_DEQUE_H
 
-#define DEFAULT_LIST_ALLOC_SIZE 10
-#define LIST_ALLOC_SIZE_MULTIPLIER 2
+#define DEFAULT_deque_ALLOC_SIZE 10
+#define deque_ALLOC_SIZE_MULTIPLIER 2
 
 typedef struct deque {
     void **valArray;
@@ -11,15 +11,16 @@ typedef struct deque {
     unsigned int allocSize;
 } deque;
 
-deque * createList();                       // create a new double-ended queue
-void listAdd(deque *list, void *value);     // add value to end
-void listShift(deque *list, void *value);   // add value to front
-void * listUnshift(deque *list);            // remove and return value at front
-void listPush(deque *list, void *value);    // add value to end
-void * listPop(deque *list);                // remove and return value at end
-void * listGet(deque *list, int index);     // get value at index
-void * listRemove(deque *list, int index);  // remove and return value at index
-void listClear(deque *list);                // remove all elements
-void listError(const char *message);
+deque * createDeque();                        // create a new double-ended queue
+void dequeAdd(deque *deque, void *value);     // add value to end
+void dequeShift(deque *deque, void *value);   // add value to front
+void * dequeUnshift(deque *deque);            // remove and return value at front
+void dequePush(deque *deque, void *value);    // add value to end
+void * dequePop(deque *deque);                // remove and return value at end
+void * dequePeek(deque *deque);               // get last value
+void * dequeGet(deque *deque, int index);     // get value at index
+void * dequeRemove(deque *deque, int index);  // remove and return value at index
+void dequeClear(deque *deque);                // remove all elements
+void dequeError(const char *message);
 
-#endif
+#endif // OLA_DEQUE_H

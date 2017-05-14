@@ -6,4 +6,4 @@ void sysError(const char *message);         // External syscall error
 
 void syntaxError(const char *message, int srcLineNr);
 
-#endif
+#endif //OLA_ERROR_H

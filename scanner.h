@@ -26,10 +26,11 @@ typedef enum primClass_t {
 // Secondary classifications
 typedef enum subClass_t {
     IDENTIFIER,
+    R_PAREN,
     STRING,
     INTEGER,
     FLOAT,
-    BOOL,
+    BOOLEAN,
     FOR,
     WHILE,
     IF,
@@ -56,7 +57,8 @@ void testScanner();
 char * getNext();
 char resolveEscapeSequence(char escapedChar);
 void classifyToken(token_t *tok);
-char * readNextToken(bool advance);
+token_t *dupToken(token_t *targetToken);
+        char * readNextToken(bool advance);
 void advanceCursor();
 
 #endif

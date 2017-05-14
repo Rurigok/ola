@@ -5,117 +5,131 @@
 #include "deque.h"
 #include "error.h"
 
-deque * createList() {
+deque * createDeque() {
 
-    deque *newList = (deque *) malloc(sizeof(deque));
+    deque *newDeque = (deque *) malloc(sizeof(deque));
 
-    if (newList == NULL) {
+    if (newDeque == NULL) {
         sysError("malloc");
     }
 
-    newList->size = 0;
-    newList->maxPopIndex = -1;
-    newList->valArray = (void **) calloc(sizeof(void *), DEFAULT_LIST_ALLOC_SIZE);
-    newList->allocSize = DEFAULT_LIST_ALLOC_SIZE;
+    newDeque->size = 0;
+    newDeque->maxPopIndex = -1;
+    newDeque->valArray = (void **) calloc(sizeof(void *), DEFAULT_deque_ALLOC_SIZE);
+    newDeque->allocSize = DEFAULT_deque_ALLOC_SIZE;
 
-    if (newList->valArray == NULL) {
+    if (newDeque->valArray == NULL) {
         sysError("calloc");
     }
 
-    return newList;
+    return newDeque;
 
 }
 
-void listAdd(deque *list, void *value) {
-    listPush(list, value);
+void dequeAdd(deque *deque, void *value) {
+    dequePush(deque, value);
 }
 
-void listShift(deque *list, void *value) {
+void dequeShift(deque *deque, void *value) {
 
 }
 
-void * listUnshift(deque *list) {
+void * dequeUnshift(deque *deque) {
     return NULL;
 }
 
-void listPush(deque *list, void *value) {
+void dequePush(deque *deque, void *value) {
 
-    if (list == NULL) {
-        listError("push to uninitialized list");
+    if (deque == NULL) {
+        dequeError("push to uninitialized deque");
     }
 
-    if (list->size >= list->allocSize) {
+    if (deque->size >= deque->allocSize) {
         // TODO: assign realloc to temp var to check for NULL and prevent memory leak
-        list->valArray = (void **) realloc(list->valArray, sizeof(void *) * list->allocSize * LIST_ALLOC_SIZE_MULTIPLIER);
-        list->allocSize = list->allocSize * LIST_ALLOC_SIZE_MULTIPLIER;
+        deque->valArray = (void **) realloc(deque->valArray, sizeof(void *) * deque->allocSize * deque_ALLOC_SIZE_MULTIPLIER);
+        deque->allocSize = deque->allocSize * deque_ALLOC_SIZE_MULTIPLIER;
     }
 
-    list->maxPopIndex++;
-    list->valArray[list->maxPopIndex] = value;
-    list->size++;
+    deque->maxPopIndex++;
+    deque->valArray[deque->maxPopIndex] = value;
+    deque->size++;
 
 }
 
-void * listPop(deque *list) {
+void * dequePop(deque *deque) {
 
-    if (list == NULL) {
-        listError("pop from uninitialized list");
+    if (deque == NULL) {
+        dequeError("pop from uninitialized deque");
     }
 
-    if (list->size == 0) {
+    if (deque->size == 0) {
         return NULL;
     }
 
-    void *poppedValue = list->valArray[list->maxPopIndex];
+    void *poppedValue = deque->valArray[deque->maxPopIndex];
 
-    list->valArray[list->maxPopIndex] = NULL;
-    list->size--;
-    list->maxPopIndex--;
+    deque->valArray[deque->maxPopIndex] = NULL;
+    deque->size--;
+    deque->maxPopIndex--;
 
     return poppedValue;
 
 }
 
-void * listGet(deque *list, int index) {
+void * dequePeek(deque *deque) {
 
-    if (list == NULL) {
-        listError("get from uninitialized list");
-    }
-
-    if (list->size <= 0 || index > list->maxPopIndex) {
-        return NULL;
-    }
-
-    return list->valArray[index];
+    return dequeGet(deque, deque->maxPopIndex);
 
 }
 
-void * listRemove(deque *list, int index) {
+void * dequeGet(deque *deque, int index) {
 
-    if (list == NULL) {
-        listError("remove from uninitialized list");
+    if (deque == NULL) {
+        dequeError("get from uninitialized deque");
     }
 
-    if (list->size <= 0 || index > list->maxPopIndex) {
+    if (deque->size <= 0 || index > deque->maxPopIndex) {
         return NULL;
     }
 
-    void *removedValue = list->valArray[index];
+    return deque->valArray[index];
 
-    memmove(&list->valArray[index], &list->valArray[index + 1], sizeof(void *) * (list->maxPopIndex - index));
+}
 
-    list->size--;
-    list->maxPopIndex--;
+void * dequeRemove(deque *deque, int index) {
+
+    if (deque == NULL) {
+        dequeError("remove from uninitialized deque");
+    }
+
+    if (deque->size <= 0 || index > deque->maxPopIndex) {
+        return NULL;
+    }
+
+    void *removedValue = deque->valArray[index];
+
+    memmove(&deque->valArray[index], &deque->valArray[index + 1], sizeof(void *) * (deque->maxPopIndex - index));
+
+    deque->size--;
+    deque->maxPopIndex--;
 
     return removedValue;
 
 }
 
-void listClear(deque *list) {
+void dequeClear(deque *deque) {
+
+    if (deque == NULL) {
+        dequeError("clear uninitialized deque");
+    }
+
+    while (deque->size > 0) {
+        dequeRemove(deque, 0);
+    }
 
 }
 
-void listError(const char *message) {
-    fprintf(stderr, "Internal list error: %s\n", message);
+void dequeError(const char *message) {
+    fprintf(stderr, "Internal deque error: %s\n", message);
     exit(EXIT_FAILURE);
 }
