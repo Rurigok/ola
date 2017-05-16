@@ -12,7 +12,7 @@ typedef struct entry_s {
 
 typedef struct hashtable_s {
     int size;
-    struct entry_t *table[];
+    struct entry_s **table;
 } hashtable_t;
 
 unsigned int hashfunc(void *key, unsigned int keySize, unsigned int tableSize); // create a hash value from key
