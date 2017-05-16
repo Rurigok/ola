@@ -7,6 +7,20 @@
 #include "error.h"
 #include "hashtable.h"
 
+unsigned int hashfunc(void *key, unsigned int keySize, unsigned int tableSize) {
+    unsigned int digest, x;
+    unsigned int *keyVal;
+    
+    keyVal = (unsigned int *)key;
+    
+    /* multiplication method of hashing */
+    digest = 0;
+    for (x = 0; x < keySize; x++)
+        digest = digest * MULTIPLIER + keyVal[x];
+    
+    return digest % tableSize;
+}
+
 hashtable_t * ht_create(int size) {
 
     if (size < 1)
@@ -19,13 +33,15 @@ hashtable_t * ht_create(int size) {
         return NULL;
     
     /* memalloc entries */
-    if ((ht -> table = calloc(sizeof(*entry_t), size)) == NULL)
+    if ((ht -> table = calloc(size, sizeof(entry_t*))) == NULL)
         return NULL;
     
     ht -> size = size;
     
     return ht;
 }
+
+// TODO: ht_rehash
 
 void ht_put(hashtable_t *ht, void *key, unsigned int keySize, void *value) {
 
@@ -38,8 +54,7 @@ void ht_put(hashtable_t *ht, void *key, unsigned int keySize, void *value) {
     if (value == NULL)
         internalError("Attempt to insert invalid value pointer into hash table");
 
-    // TODO: convert key into numeric key w/ nice hash algorithm
-    unsigned int hashKey = 0;
+    unsigned int hashKey = hashfunc(key, keySize, ht -> size);
 
     if (ht->table[hashKey] == NULL) {
         // Slot is empty. Add a new entry here
@@ -88,8 +103,7 @@ void * ht_get(hashtable_t *ht, void *key, unsigned int keySize) {
     if (key == NULL)
         internalError("Attempt to put null key into hash table");
 
-    // TODO: convert key into numeric key w/ nice hash algorithm
-    unsigned int hashKey = 0;
+    unsigned int hashKey = hashfunc(key, keySize, ht -> size);
 
     entry_t *found = ht->table[hashKey];
 
@@ -108,3 +122,7 @@ void * ht_get(hashtable_t *ht, void *key, unsigned int keySize) {
         return NULL;
 
 }
+
+// TODO: ht_remove
+
+// TODO: ht_clear
