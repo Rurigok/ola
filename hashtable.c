@@ -101,7 +101,7 @@ void * ht_get(hashtable_t *ht, void *key, unsigned int keySize) {
         internalError("Attempt to get from uninitialized hash table");
 
     if (key == NULL)
-        internalError("Attempt to put null key into hash table");
+        internalError("Attempt to get null key into hash table");
 
     unsigned int hashKey = hashfunc(key, keySize, ht -> size);
 
